@@ -14,7 +14,7 @@ interface Skill {
 
 const skills: Skill[] = [
   // Cybersecurity
-  { name: 'Linux Systems', level: 95, category: 'cybersecurity', icon: '🐧', description: 'Advanced Linux administration & security' },
+  { name: 'Kali Linux', level: 95, category: 'cybersecurity', icon: '🜶', description: 'Advanced Linux administration & security' },
   { name: 'Metasploit Framework', level: 90, category: 'cybersecurity', icon: '⚡', description: 'Penetration testing & exploitation' },
   { name: 'ParrotOS', level: 88, category: 'cybersecurity', icon: '🦜', description: 'Security-focused Linux distribution' },
   { name: 'Burp Suite', level: 92, category: 'cybersecurity', icon: '🕷️', description: 'Web application security testing' },
@@ -32,25 +32,20 @@ const skills: Skill[] = [
   // Full-Stack Development
   { name: 'React', level: 93, category: 'fullstack', icon: '⚛️', description: 'Modern frontend development' },
   { name: 'Next.js', level: 90, category: 'fullstack', icon: '▲', description: 'Full-stack React framework' },
-  { name: 'Express.js', level: 88, category: 'fullstack', icon: '🚀', description: 'Node.js web framework' },
   { name: 'Flask', level: 85, category: 'fullstack', icon: '🌶️', description: 'Python web framework' },
-  { name: 'PostgreSQL', level: 87, category: 'fullstack', icon: '🐘', description: 'Relational database management' },
   { name: 'MongoDB', level: 85, category: 'fullstack', icon: '🍃', description: 'NoSQL document database' },
   { name: 'CouchDB/PouchDB', level: 82, category: 'fullstack', icon: '🛋️', description: 'Distributed database systems' },
   
   // AI & Machine Learning
-  { name: 'TensorFlow', level: 88, category: 'ai', icon: '🧠', description: 'Deep learning & neural networks' },
   { name: 'OpenCV', level: 85, category: 'ai', icon: '👁️', description: 'Computer vision & image processing' },
   { name: 'Machine Learning', level: 87, category: 'ai', icon: '🤖', description: 'ML algorithms & model training' },
-  { name: 'Data Analysis', level: 85, category: 'ai', icon: '📊', description: 'Statistical analysis & insights' },
   { name: 'Neural Networks', level: 86, category: 'ai', icon: '🕸️', description: 'Deep learning architectures' },
   
   // Development Tools
   { name: 'macOS', level: 95, category: 'tools', icon: '🍎', description: 'Primary development environment' },
-  { name: 'Ubuntu Linux', level: 90, category: 'tools', icon: '🐧', description: 'Server & development environment' },
-  { name: 'Git/GitHub', level: 92, category: 'tools', icon: '📚', description: 'Version control & collaboration' },
-  { name: 'Docker', level: 85, category: 'tools', icon: '🐳', description: 'Containerization & deployment' },
-  { name: 'VS Code', level: 90, category: 'tools', icon: '💻', description: 'Primary code editor' },
+  { name: 'Linux', level: 90, category: 'tools', icon: '🐧', description: 'Server & development environment' },
+  { name: 'GitHub', level: 92, category: 'tools', icon: '📚', description: 'Version control & collaboration' },
+
 ];
 
 const SkillBar = ({ skill, index }: { skill: Skill; index: number }) => {
