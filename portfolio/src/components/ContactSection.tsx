@@ -328,7 +328,7 @@ const ContactSection = () => {
             <h3 className="text-xl font-mono text-green-400 mb-4">[READY_TO_COLLABORATE]</h3>
             <p className="text-green-300 mb-6 font-mono text-sm max-w-2xl">
               Whether you need penetration testing, AI-powered security solutions, or Secure Full stack development,
-              I'm here to help secure your digital assets. Let's build something bulletproof together.
+              I&apos;m here to help secure your digital assets. Let&apos;s build something bulletproof together.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <motion.button
