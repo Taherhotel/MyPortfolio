@@ -1,0 +1,291 @@
+@import "tailwindcss";
+
+:root {
+  --background: #000000;
+  --foreground: #00ff41;
+  --cyber-green: #00ff41;
+  --cyber-green-dark: #00cc33;
+  --cyber-blue: #00ffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+}
+
+/* Cybersecurity themed animations and effects */
+@keyframes matrix-rain {
+  0% { transform: translateY(-100vh); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+@keyframes neon-glow {
+  0%, 100% { 
+    text-shadow: 0 0 5px var(--cyber-green), 0 0 10px var(--cyber-green), 0 0 15px var(--cyber-green);
+  }
+  50% { 
+    text-shadow: 0 0 10px var(--cyber-green), 0 0 20px var(--cyber-green), 0 0 30px var(--cyber-green);
+  }
+}
+
+@keyframes cyber-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 5px var(--cyber-green), inset 0 0 5px var(--cyber-green);
+  }
+  50% { 
+    box-shadow: 0 0 20px var(--cyber-green), inset 0 0 10px var(--cyber-green);
+  }
+}
+
+@keyframes scan-line {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100vw); }
+}
+
+@keyframes data-stream {
+  0% { transform: translateX(-100%); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(100vw); opacity: 0; }
+}
+
+@keyframes circuit-flow {
+  0% { stroke-dashoffset: 100; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+}
+
+@keyframes terminal-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+@keyframes security-scan {
+  0% { width: 0%; }
+  50% { width: 100%; }
+  100% { width: 0%; }
+}
+
+.neon-text {
+  color: var(--cyber-green);
+  animation: neon-glow 2s ease-in-out infinite alternate;
+}
+
+.cyber-border {
+  border: 1px solid var(--cyber-green);
+  box-shadow: 0 0 10px var(--cyber-green-dark);
+  position: relative;
+}
+
+.cyber-border::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  background: linear-gradient(45deg, transparent, var(--cyber-green), transparent);
+  z-index: -1;
+  opacity: 0.3;
+}
+
+.matrix-bg {
+  background: 
+    radial-gradient(circle at 20% 50%, var(--cyber-green-dark) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, var(--cyber-blue) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, var(--cyber-red) 0%, transparent 50%);
+  /* Removed animation: matrix-rain 10s linear infinite; */
+}
+
+.cyber-pulse {
+  animation: cyber-pulse 2s ease-in-out infinite;
+}
+
+.scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyber-green), transparent);
+  animation: scan-line 3s linear infinite;
+}
+
+.neon-glow:hover {
+  text-shadow: 
+    0 0 5px var(--cyber-green),
+    0 0 10px var(--cyber-green),
+    0 0 15px var(--cyber-green),
+    0 0 20px var(--cyber-green);
+  transition: text-shadow 0.3s ease;
+}
+
+.data-stream {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyber-green), transparent);
+  animation: data-stream 4s linear infinite;
+}
+
+.circuit-pattern {
+  background-image: 
+    linear-gradient(90deg, var(--cyber-green-dark) 1px, transparent 1px),
+    linear-gradient(var(--cyber-green-dark) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.1;
+}
+
+.glitch-effect {
+  animation: glitch 0.3s ease-in-out infinite;
+}
+
+.terminal-cursor::after {
+  content: '█';
+  animation: terminal-blink 1s infinite;
+  color: var(--cyber-green);
+}
+
+.security-progress {
+  position: relative;
+  overflow: hidden;
+}
+
+.security-progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--cyber-green), transparent);
+  animation: security-scan 2s ease-in-out infinite;
+}
+
+.cyber-grid {
+  background-image: 
+    linear-gradient(rgba(0, 255, 65, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 65, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+.hologram-effect {
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(0, 255, 65, 0.1) 50%,
+    transparent 70%
+  );
+  background-size: 20px 20px;
+  animation: data-stream 3s linear infinite;
+}
+
+.cyber-noise {
+  position: relative;
+}
+
+.cyber-noise::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 255, 65, 0.03) 2px,
+      rgba(0, 255, 65, 0.03) 4px
+    );
+  pointer-events: none;
+}
+
+.matrix-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      var(--cyber-green-dark) 2px,
+      var(--cyber-green-dark) 4px
+    );
+  opacity: 0.1;
+  /* Removed animation: matrix-rain 15s linear infinite reverse; */
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+  .cyber-border {
+    border-width: 1px;
+  }
+  
+  .neon-text {
+    font-size: 0.9em;
+  }
+  
+  .scan-line {
+    height: 1px;
+  }
+  
+  .cyber-grid {
+    background-size: 25px 25px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --cyber-green: #00ff00;
+    --cyber-green-dark: #008000;
+  }
+  
+  .neon-text {
+    text-shadow: none;
+    font-weight: bold;
+  }
+  
+  .cyber-border {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .neon-text,
+  .cyber-pulse,
+  .scan-line,
+  .matrix-bg,
+  .data-stream,
+  .glitch-effect,
+  .terminal-cursor::after,
+  .security-progress::after,
+  .hologram-effect {
+    animation: none;
+  }
+  
+  .neon-glow:hover {
+    transition: none;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', monospace;
+  overflow-x: hidden;
+}
