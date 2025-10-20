@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Akbar's Portfolio | Cybersecurity Expert & Developer",
+  title: "Taher's Portfolio | Cybersecurity Expert & Developer",
   description: "Elite cybersecurity portfolio showcasing penetration testing, ethical hacking, and secure development with cutting-edge 3D visualizations",
   keywords: ["cybersecurity", "penetration testing", "ethical hacking", "security", "developer", "portfolio", "threejs", "cyber"],
   authors: [{ name: "Taher" }],
