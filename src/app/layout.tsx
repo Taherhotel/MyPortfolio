@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { VT323 } from "next/font/google";
 import "./globals.css";
-import Navigation from "@/components/Navigation";
 
-const inter = Inter({
+const vt323 = VT323({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: "400",
+  variable: "--font-vt323",
 });
 
 export const metadata: Metadata = {
-  title: "Taher's Portfolio | Cybersecurity Expert & Developer",
-  description: "Elite cybersecurity portfolio showcasing penetration testing, ethical hacking, and secure development with cutting-edge 3D visualizations",
-  keywords: ["cybersecurity", "penetration testing", "ethical hacking", "security", "developer", "portfolio", "threejs", "cyber"],
+  title: "Taher's Portfolio | Developer & Cyber Expert",
+  description: "Elite portfolio showcasing development, cybersecurity, and design with cutting-edge visual experiences.",
+  keywords: ["cybersecurity", "developer", "designer", "portfolio", "threejs", "nextjs"],
   authors: [{ name: "Taher" }],
   viewport: "width=device-width, initial-scale=1",
 };
@@ -22,14 +22,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body className={`${inter.variable} font-sans antialiased bg-black text-green-400 overflow-x-hidden`}>
-        <div className="fixed inset-0 bg-gradient-to-br from-black via-gray-900 to-green-900 opacity-50 pointer-events-none"></div>
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+      <body className={`${vt323.className} antialiased bg-black text-gray-200`} suppressHydrationWarning>
         <div className="relative z-10">
-          <Navigation />
-          <main className="relative">
-            {children}
-          </main>
+          {children}
         </div>
       </body>
     </html>

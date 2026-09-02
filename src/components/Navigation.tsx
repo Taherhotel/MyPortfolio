@@ -5,45 +5,30 @@ import { motion } from 'framer-motion';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
+  const [activeSection] = useState('home');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentTime, setCurrentTime] = useState('');
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
 
-    // Update time every second
-    const updateTime = () => {
-      const now = new Date();
-      setCurrentTime(now.toLocaleTimeString('en-US', { 
-        hour12: false,
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      }));
-    };
-
-    updateTime();
-    const timeInterval = setInterval(updateTime, 1000);
-
     window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearInterval(timeInterval);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const navItems = [
-    { name: 'HOME', href: '#home', command: 'cd ~/' },
-    { name: 'ABOUT', href: '#about', command: 'cat about.txt' },
-    { name: 'PROJECTS', href: '#projects', command: 'ls exploits/' },
-    { name: 'SKILLS', href: '#skills', command: 'cat skills.cfg' },
-    { name: 'CONTACT', href: '#contact', command: 'ssh contact' },
+    { name: 'Home', href: '#home' },
+    { name: 'About', href: '#about' },
+    { name: 'Projects', href: '#projects' },
+    { name: 'Skills', href: '#skills' },
+    { name: 'Contact', href: '#contact' },
   ];
 
   const scrollToSection = (href: string) => {
+    // We might not need traditional smooth scroll if we are doing horizontal sticky scroll.
+    // In horizontal sticky scroll, clicking nav links is tricky because the sections are not stacked vertically, but inside a sticky horizontal container.
+    // A simplified scroll action for now:
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -57,91 +42,68 @@ const Navigation = () => {
       animate={{ y: 0 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-black/95 backdrop-blur-md border-b border-green-400/30 shadow-lg shadow-green-400/20' 
-          : 'bg-black/50 backdrop-blur-sm'
+          ? 'py-2 bg-black/50 backdrop-blur-md border-b border-white/5' 
+          : 'py-4 bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-3">
-          {/* Logo/Brand */}
+        <div className="flex justify-between items-center">
+          
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-2 font-bold text-xl tracking-tighter text-white"
           >
-            <div className="text-green-400 font-mono text-lg">
-              <span className="text-cyan-400">root@</span>
-              <span className="text-green-400">Taher</span>
-              <span className="text-white">:</span>
-              <span className="text-blue-400">~</span>
-              <span className="text-white">$</span>
-              <span className="animate-pulse text-green-400">_</span>
-            </div>
+            T<span className="text-cyan-400">.</span>H
           </motion.div>
 
-          {/* System Status */}
-          <div className="hidden lg:flex items-center space-x-4 text-xs font-mono">
-            <div className="flex items-center space-x-1">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-green-400">SECURE</span>
-            </div>
-            <div className="text-cyan-400">{currentTime}</div>
-            <div className="text-yellow-400">CPU: 12%</div>
-            <div className="text-blue-400">MEM: 34%</div>
-          </div>
-
           {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-1">
-            {navItems.map((item, index) => (
-              <motion.button
+          <div className="hidden md:flex space-x-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 backdrop-blur-sm">
+            {navItems.map((item) => (
+              <button
                 key={item.name}
                 onClick={() => scrollToSection(item.href)}
-                whileHover={{ scale: 1.05, backgroundColor: 'rgba(0, 255, 65, 0.1)' }}
-                whileTap={{ scale: 0.95 }}
-                className={`relative px-4 py-2 text-sm font-mono transition-all duration-300 rounded border ${
+                className={`relative px-4 py-1.5 text-sm font-medium transition-all duration-300 rounded-full ${
                   activeSection === item.href.slice(1)
-                    ? 'text-black bg-green-400 border-green-400 shadow-lg shadow-green-400/50'
-                    : 'text-green-400 border-green-400/30 hover:border-green-400 hover:text-green-300'
+                    ? 'text-black bg-white'
+                    : 'text-gray-400 hover:text-white hover:bg-white/10'
                 }`}
-                title={item.command}
               >
-                <span className="text-cyan-400 mr-1">[</span>
                 {item.name}
-                <span className="text-cyan-400 ml-1">]</span>
-                
-                {/* Cyber glow effect */}
-                {activeSection === item.href.slice(1) && (
-                  <motion.div
-                    layoutId="cyberGlow"
-                    className="absolute inset-0 bg-green-400/20 rounded border border-green-400"
-                    style={{ filter: 'blur(4px)' }}
-                  />
-                )}
-              </motion.button>
+              </button>
             ))}
+          </div>
+
+          {/* Contact Button */}
+          <div className="hidden md:block">
+            <button 
+              onClick={() => scrollToSection('#contact')}
+              className="px-6 py-2 rounded-full border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500 hover:text-black transition-colors text-sm font-semibold"
+            >
+              Let&apos;s Talk
+            </button>
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden">
-            <motion.button
-              whileTap={{ scale: 0.95 }}
+            <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-green-400 hover:text-green-300 p-2 border border-green-400/30 rounded font-mono"
+              className="text-white p-2"
             >
-              <div className="w-6 h-6 flex flex-col justify-center items-center">
+              <div className="w-6 h-6 flex flex-col justify-center items-center gap-1.5">
                 <motion.div
-                  animate={isMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-                  className="w-5 h-0.5 bg-current mb-1"
+                  animate={isMenuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
+                  className="w-5 h-0.5 bg-current"
                 />
                 <motion.div
                   animate={isMenuOpen ? { opacity: 0 } : { opacity: 1 }}
-                  className="w-5 h-0.5 bg-current mb-1"
+                  className="w-5 h-0.5 bg-current"
                 />
                 <motion.div
-                  animate={isMenuOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
+                  animate={isMenuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
                   className="w-5 h-0.5 bg-current"
                 />
               </div>
-            </motion.button>
+            </button>
           </div>
         </div>
 
@@ -149,47 +111,21 @@ const Navigation = () => {
         <motion.div
           initial={false}
           animate={isMenuOpen ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
-          className="md:hidden overflow-hidden border-t border-green-400/30"
+          className="md:hidden overflow-hidden mt-4"
         >
-          <div className="py-4 space-y-2">
+          <div className="flex flex-col gap-2 p-4 bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl">
             {navItems.map((item) => (
-              <motion.button
+              <button
                 key={item.name}
                 onClick={() => scrollToSection(item.href)}
-                whileHover={{ x: 10 }}
-                whileTap={{ scale: 0.95 }}
-                className="block w-full text-left px-4 py-3 text-sm font-mono text-green-400 hover:text-green-300 hover:bg-green-400/10 border border-green-400/20 rounded transition-all duration-300"
+                className="w-full text-left px-4 py-3 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
               >
-                <div className="flex items-center justify-between">
-                  <span>
-                    <span className="text-cyan-400">$</span> {item.command}
-                  </span>
-                  <span className="text-xs text-gray-500">{item.name}</span>
-                </div>
-              </motion.button>
+                {item.name}
+              </button>
             ))}
-            
-            {/* Mobile System Status */}
-            <div className="px-4 py-2 border-t border-green-400/30 mt-4">
-              <div className="flex justify-between text-xs font-mono">
-                <div className="flex items-center space-x-1">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-green-400">SECURE</span>
-                </div>
-                <div className="text-cyan-400">{currentTime}</div>
-              </div>
-            </div>
           </div>
         </motion.div>
       </div>
-
-      {/* Cyber scan line effect */}
-      <motion.div
-        className="absolute bottom-0 left-0 h-px bg-gradient-to-r from-transparent via-green-400 to-transparent"
-        animate={{ x: ['-100%', '100%'] }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-        style={{ width: '200%' }}
-      />
     </motion.nav>
   );
 };
