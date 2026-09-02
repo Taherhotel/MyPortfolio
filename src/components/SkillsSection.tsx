@@ -46,7 +46,7 @@ export default function SkillsSection() {
               </h3>
               
               <div className="flex flex-col gap-3">
-                {skillGroup.items.map((item, i) => (
+                {skillGroup.items.map((item) => (
                   <div key={item} className="flex items-center gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-cyan-400/50"></div>
                     <span className="text-gray-300 font-medium text-sm">{item}</span>

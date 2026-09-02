@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { createNoise3D } from 'simplex-noise';
 import * as THREE from 'three';
 
 const GLSLHills = ({ width = '100vw', height = '100vh', cameraZ = 125, planeSize = 256, speed = 1.0 }) => {
@@ -186,7 +187,7 @@ const GLSLHills = ({ width = '100vw', height = '100vh', cameraZ = 125, planeSize
     const stars = new THREE.Points(starGeometry, starMaterial);
 
     // Stone Monoliths setup
-    const noise3D = (typeof window !== 'undefined') ? require('simplex-noise').createNoise3D() : () => 0;
+    const noise3D = typeof window !== 'undefined' ? createNoise3D() : () => 0;
 
     function getTerrainHeight(x: number, z: number, time: number) {
       const sin1 = Math.sin((x / 128.0 * 90.0) * (Math.PI / 180.0));

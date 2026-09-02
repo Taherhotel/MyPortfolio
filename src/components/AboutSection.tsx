@@ -38,7 +38,7 @@ const TypingTerminal = () => {
         return () => clearTimeout(timer);
       }
     }
-  }, [currentLineIndex, currentCharIndex, terminalLines]);
+  }, [currentLineIndex, currentCharIndex]);
 
   return (
     <div className="w-full h-full min-h-[320px] bg-[#0a0a0a]/80 backdrop-blur-sm border border-white/10 rounded-xl p-5 font-mono text-gray-300 text-sm overflow-hidden relative shadow-2xl flex flex-col">
