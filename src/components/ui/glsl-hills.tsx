@@ -3,8 +3,23 @@
 import { useEffect, useRef } from 'react';
 import { createNoise3D } from 'simplex-noise';
 import * as THREE from 'three';
+import { MotionValue } from 'framer-motion';
 
-const GLSLHills = ({ width = '100vw', height = '100vh', cameraZ = 125, planeSize = 256, speed = 1.0 }) => {
+export const GLSLHills = ({ 
+  width = '100vw', 
+  height = '100vh', 
+  cameraZ = 125, 
+  planeSize = 256, 
+  speed = 1.0,
+  scrollYProgress 
+}: { 
+  width?: string; 
+  height?: string; 
+  cameraZ?: number; 
+  planeSize?: number; 
+  speed?: number;
+  scrollYProgress?: MotionValue<number>;
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -236,27 +251,33 @@ const GLSLHills = ({ width = '100vw', height = '100vh', cameraZ = 125, planeSize
       });
     });
 
-    // We only create exactly ONE instance per logo to guarantee no duplicates on screen
-    const numLogos = logos.length;
-
-    // Distribute them evenly along the Z axis so they never overlap in depth!
-    // Since depth is 260 (-130 to 130), spacing them evenly guarantees they never collide.
-    const zSpacing = 260 / numLogos;
+    // We have 8 logos. We will put exactly 4 on the left, and 4 on the right.
+    const numLogos = logos.length; 
+    const logosPerSide = numLogos / 2;
+    
+    // Z-spacing is now massive (260 / 4 = 65 units apart) because each lane only holds 4 logos!
+    const zSpacing = 260 / logosPerSide;
 
     for (let i = 0; i < numLogos; i++) {
       const logoMat = logoMaterials[i];
       const mesh = new THREE.Mesh(stoneGeo, logoMat);
-
-      // Keep the middle clean: x is either between -80 and -40, or 40 and 80
-      const side = Math.random() > 0.5 ? 1 : -1;
-      mesh.position.x = side * (Math.random() * 40 + 40);
-      mesh.position.z = -130 + (i * zSpacing);
-
-      // Keep them perfectly upright to act as 2D billboards
+      
+      const isLeft = i < logosPerSide;
+      const laneIndex = i % logosPerSide;
+      
+      // Base lane positions: -60 for left, +60 for right.
+      // We add a tiny bit of random jitter (±10) so they aren't in a rigid straight line
+      const baseX = isLeft ? -60 : 60;
+      mesh.position.x = baseX + (Math.random() * 20 - 10); 
+      
+      // Spread evenly along the Z axis
+      mesh.position.z = -130 + (laneIndex * zSpacing); 
+      
+      // Keep them perfectly upright
       mesh.rotation.x = -0.1;
       mesh.rotation.y = 0;
       mesh.rotation.z = 0;
-
+      
       stoneGroup.add(mesh);
       stones.push(mesh);
     }
@@ -273,24 +294,59 @@ const GLSLHills = ({ width = '100vw', height = '100vh', cameraZ = 125, planeSize
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
 
+    let lastScroll = 0;
+    let currentSpeed = speed;
+
     const render = () => {
       const delta = clock.getDelta();
+      
+      let targetSpeed = speed;
+      
+      // Map scroll position to warp speed (so they don't have to scroll fast physically)
+      if (scrollYProgress) {
+        const scroll = scrollYProgress.get();
+        lastScroll = scroll; // kept just for compatibility if needed elsewhere
+        
+        // The transition from Hero to About is roughly scroll = 0 to scroll = 0.25
+        if (scroll > 0.005 && scroll < 0.25) {
+          // Calculate how far along we are to the About section (0 to 1)
+          const progressToAbout = scroll / 0.25; 
+          
+          // Use a sine wave to peak the speed in the middle of the transition
+          const warpMultiplier = Math.sin(progressToAbout * Math.PI); 
+          
+          // Decreased the warp speed from 40.0 to 15.0 for a smoother, less aggressive acceleration
+          targetSpeed = speed + (warpMultiplier * 15.0); 
+        }
+      }
+      
+      // Smoothly interpolate current speed towards target speed for buttery smooth acceleration and deceleration
+      currentSpeed += (targetSpeed - currentSpeed) * 0.1;
+      
+      // Keep camera fixed so it doesn't violently jump; let the warp speed terrain give the illusion of moving forward
+      camera.position.z = 125;
+      
+      plane.time = currentSpeed;
       plane.render(delta);
 
       // Update stones to ride the terrain waves
       stones.forEach(stone => {
         // Move forward at the exact speed of the terrain noise (30.0)
-        stone.position.z += delta * speed * 30.0;
+        stone.position.z += delta * currentSpeed * 30.0;
 
-        // Loop back to the distance once it passes the camera
+        // Only loop the logos if we are on the Hero section!
+        // If we scroll down (progress > 0.01), they will fly past the camera and not loop, leaving just the fast hills!
+        const isHeroSection = scrollYProgress ? scrollYProgress.get() < 0.01 : true;
+
         if (stone.position.z > 130) {
-          stone.position.z -= 260; // loop back to -130
-          // We keep the exact same X position so the sequence acts as a single fixed moving group
+          if (isHeroSection) {
+            stone.position.z -= 260; 
+          }
         }
 
         // Update Y position to sit just slightly above the terrain so it doesn't clip into slopes
         const terrainY = getTerrainHeight(stone.position.x, stone.position.z, plane.uniforms.time.value);
-        stone.position.y = terrainY + 5.0; // Elevated significantly so the camera (which is low) can clearly see them over peaks
+        stone.position.y = terrainY + 12.0; 
       });
 
       renderer.render(scene, camera);
@@ -343,5 +399,3 @@ const GLSLHills = ({ width = '100vw', height = '100vh', cameraZ = 125, planeSize
     </div>
   );
 };
-
-export { GLSLHills };

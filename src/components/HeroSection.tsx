@@ -1,18 +1,12 @@
 'use client';
 
-import { motion, useTransform, MotionValue, useMotionValue, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, MotionValue, useTransform, useMotionValue } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { GLSLHills } from "./ui/glsl-hills";
 
 const greetings = ["HELLO", "HOLA", "BONJOUR", "CIAO", "HALLO", "NAMASTE", "こんにちは", "مرحبا", "ПРИВЕТ", "안녕하세요"];
 const roles = ["AN INNOVATOR", "A DESIGNER", "A DEVELOPER"];
 
 export default function HeroSection({ scrollYProgress }: { scrollYProgress?: MotionValue<number> }) {
-  const defaultScroll = useMotionValue(0);
-  const activeScroll = scrollYProgress || defaultScroll;
-  const scale = useTransform(activeScroll, [0, 0.15], [1, 0.5]);
-  const opacity = useTransform(activeScroll, [0, 0.15], [1, 0]);
-  const y = useTransform(activeScroll, [0, 0.15], ["0%", "50%"]);
 
   const [greetingIndex, setGreetingIndex] = useState(0);
 
@@ -20,6 +14,22 @@ export default function HeroSection({ scrollYProgress }: { scrollYProgress?: Mot
   const [roleText, setRoleText] = useState("");
   const [roleIndex, setRoleIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Scroll animations for tearing apart effect
+  const fallbackScroll = useMotionValue(0);
+  const scroll = scrollYProgress || fallbackScroll;
+
+  // The text starts tearing apart as soon as we start scrolling (0 to 0.15)
+  const leftX = useTransform(scroll, [0, 0.15], [0, -1200]);
+  const leftRotate = useTransform(scroll, [0, 0.15], [0, -35]);
+  
+  const rightX = useTransform(scroll, [0, 0.15], [0, 1200]);
+  const rightRotate = useTransform(scroll, [0, 0.15], [0, 35]);
+
+  const topY = useTransform(scroll, [0, 0.15], [0, -800]);
+  const bottomY = useTransform(scroll, [0, 0.15], [0, 800]);
+  
+  const textOpacity = useTransform(scroll, [0.02, 0.15], [1, 0]);
 
   useEffect(() => {
     const greetingInterval = setInterval(() => {
@@ -51,15 +61,13 @@ export default function HeroSection({ scrollYProgress }: { scrollYProgress?: Mot
   }, [roleText, isDeleting, roleIndex]);
 
   return (
-    <motion.div
-      className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden bg-black"
-      style={{ scale, opacity, y }}
-    >
-      <GLSLHills />
-
+    <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden bg-transparent">
       <div className="absolute z-10 flex flex-col items-center justify-center text-center pointer-events-none px-4 -mt-48 md:-mt-64 w-full">
 
-        <div className="h-16 relative w-full flex items-center justify-center mb-2">
+        <motion.div 
+          className="h-16 relative w-full flex items-center justify-center mb-2"
+          style={{ y: topY, opacity: textOpacity }}
+        >
           <AnimatePresence mode="wait">
             <motion.h2
               key={greetingIndex}
@@ -73,22 +81,37 @@ export default function HeroSection({ scrollYProgress }: { scrollYProgress?: Mot
               {greetings[greetingIndex]}, I AM
             </motion.h2>
           </AnimatePresence>
-        </div>
+        </motion.div>
 
-        <motion.h1
-          className="text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-tighter mb-6 uppercase"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.2 }}
+        <motion.div 
+          className="flex flex-row items-center justify-center gap-6 mb-6"
         >
-          TAHER HOTELWALA
-        </motion.h1>
+          <motion.h1
+            className="text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-tighter uppercase origin-bottom-right"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.2 }}
+            style={{ x: leftX, rotate: leftRotate, opacity: textOpacity }}
+          >
+            TAHER
+          </motion.h1>
+          <motion.h1
+            className="text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-tighter uppercase origin-bottom-left"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            style={{ x: rightX, rotate: rightRotate, opacity: textOpacity }}
+          >
+            HOTELWALA
+          </motion.h1>
+        </motion.div>
 
         <motion.div
           className="text-base sm:text-lg md:text-2xl text-white font-bold tracking-widest uppercase flex flex-wrap items-center justify-center gap-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
+          style={{ y: bottomY, opacity: textOpacity }}
         >
           <span>AN ENGINEER BY PROFESSION,</span>
           
@@ -107,6 +130,6 @@ export default function HeroSection({ scrollYProgress }: { scrollYProgress?: Mot
           <span>BY PASSION</span>
         </motion.div>
       </div>
-    </motion.div>
+    </div>
   );
 }
